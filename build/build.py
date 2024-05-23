@@ -51,7 +51,7 @@ from recompute_overlays import isROMAddressOverlay, readOverlayOriginalData, rep
 from staticcode import patchStaticCode
 
 ROMName = "./rom/dk64.z64"
-newROMName = "./rom/dk64-newhack-dev.z64"
+newROMName = "./rom/dk64-musictest-dev.z64"
 
 if os.path.exists(newROMName):
 	os.remove(newROMName)
@@ -382,7 +382,7 @@ print("[9 / 9] - Generating BizHawk RAM watch")
 import generate_watch_file
 
 # Write custom ASM code to ROM
-subprocess.run(["build/armips.exe", "asm\main.asm", "-sym", "rom\dk64-newhack-dev.sym"])
+subprocess.run(["build/armips.exe", "asm\main.asm", "-sym", "rom\dk64-musictest-dev.sym"])
 
 # Fix CRC
 from n64crc import fixCRC

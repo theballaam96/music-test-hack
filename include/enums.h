@@ -222,3 +222,10 @@ typedef enum flagtypes {
 	/* 0x001 */ FLAGTYPE_GLOBAL,
 	/* 0x002 */ FLAGTYPE_TEMPORARY,
 } flagtypes;
+
+typedef enum codecs {
+    IA4,
+    IA8,
+    RGBA16,
+    RGBA32,
+} codecs;

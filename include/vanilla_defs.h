@@ -26,7 +26,7 @@ extern void displaySprite(void* control_pointer, void* sprite, s32 x, s32 y, s32
 extern void alterSize(void* object, s32 size);
 extern void unkSizeFunction(void* object);
 extern void spawnRocketbarrel(void* object, s32 unk);
-extern void playSong(s32 songIndex);
+extern void playSong(s32 songIndex, f32 volume);
 extern void playCutscene(void* actor, s32 cutscene_index, s32 cutscene_type);
 extern void setHUDItemAsInfinite(s32 item_index, s32 player_index, s8 isInfinite);
 extern void copyFromROM(s32 rom_start, void* write_Location, void* file_size_location, s32 unk1, s32 unk2, s32 unk3, s32 unk4);
@@ -51,6 +51,17 @@ extern void dumpReturns(void* info);
 extern s32 __osGetThreadId(void* thread);
 extern void setAction(int action, void* actor, int player_index);
 extern void handlePoleGrabbing(void* actor, int player_index, int allow_vines);
+
+extern void initiateTransitionFade(maps map, int cutscene, int gamemode);
+
+extern Gfx* initDisplayList(Gfx* dl);
+extern Gfx* displayImage(Gfx* dl, int texture_index, int unk3, codecs codec_index, int width, int height, int x, int y, float xScale, float yScale, int unk11, float unk12);
+extern Gfx* textDraw(Gfx* dl, int style, int x, int y, char* str);
+extern int cstring_strlen(char* str);
+extern int getTextStyleHeight(int style);
+extern Gfx* displayText(Gfx* dl, int style, int x, int y, void* text_pointer, char unk0);
+
+extern void audioForcePlay(int slot);
 
 // Vanilla data
 extern f32 TransitionSpeed;
@@ -137,6 +148,11 @@ extern s8 StoredDamage;
 extern void* ActorSpawnerPointer;
 extern f32 LZFadeoutProgress;
 extern hudData* HUD;
+
+extern s8 preventSongPlaying;
+extern ALCSPlayer* SeqPlayers[4];
+extern u8 SongInWriteSlot[4];
+extern s16 MusicTrackChannels[12];
 
 extern collected_item_struct* CollectedObjects;
 extern collected_item_struct* LatestCollectedObject;

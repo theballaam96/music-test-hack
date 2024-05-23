@@ -204,6 +204,7 @@
 .definelabel alEvtqPostEvent, 0x8073B310
 .definelabel alEvtqFlushType, 0x8073B490
 .definelabel n_alSynDelete, 0x8073D140
+.defineLabel audioForcePlay, 0x80601120
 
 ; Functions
 .definelabel setFlag, 0x8073129C
@@ -239,6 +240,17 @@
 .definelabel copyFromROM, 0x8060B140
 .definelabel getActorSpawnerIDFromTiedActor, 0x80688E68
 .definelabel textOverlayCode, 0x8069DA54
+.definelabel initiateTransitionFade, 0x807124B8
+.definelabel preventSongPlaying, 0x80745650
+
+.definelabel initDisplayList, 0x807132DC
+.definelabel displayImage, 0x8068C5A8
+.definelabel textDraw, 0x806FD490
+.definelabel cstring_strlen, 0x80002F18
+.definelabel getTextStyleHeight, 0x806FD894
+.definelabel displayText, 0x806FC530
+
+.defineLabel alCSPStop, 0x80739F00
 
 ; Vanilla data
 .definelabel TransitionSpeed, 0x807FD88C
@@ -325,6 +337,10 @@
 .definelabel ActorSpawnerPointer, 0x807FC400 ; u32 ptr
 .defineLabel LZFadeoutProgress, 0x807FD888 ; f32
 .defineLabel HUD, 0x80754280 ; u32 ptr
+
+.definelabel SeqPlayers, 0x8076BF20
+.defineLabel SongInWriteSlot, 0x80770560
+.defineLabel MusicTrackChannels, 0x807458DC
 
 ; Tag Anywhere
 .definelabel LatestCollectedObject, 0x807FD734

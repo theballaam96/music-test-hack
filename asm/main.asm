@@ -1,5 +1,5 @@
 .n64
-.open "rom/dk64-newhack-dev.z64", 0
+.open "rom/dk64-musictest-dev.z64", 0
 
 .include "asm/symbols.asm" ; Tell armips' linker where to find the game's function(s)
 
@@ -34,6 +34,25 @@ displacedVanillaBootCode:
 	LW t3, lo(mainASMFunctionJump) (t3)
 	LUI t4, 0x8060
 	SW t3, 0xC164 (t4) ; Store per frame hook
+	
+	; Music Fix
+	; TODO: Figure out why this crashes
+	; LUI v0, 0x8074
+	; ADDIU t3, r0, 0xD00 ; New size of bank 0
+	; SW t3, 0x52B0 (v0)
+	; LUI v0, 0x8060
+	; ADDIU t3, r0, 0x38 ; Phys Voice Count
+	; SH t3, 0xDA2 (v0)
+	; ADDIU t3, r0, 0x70 ; Virtual Voice Count
+	; SH t3, 0xDA6 (v0)
+	
+	; Write Init Hook
+	LUI t3, hi(initHook)
+	LW t3, lo(initHook) (t3)
+	LUI t4, 0x8060
+	SW t3, 0xBDEC (t4) // Store Hook
+	SW r0, 0xBDF0 (t4) // Store NOP
+	; Overlay Fixes
 	LUI t3, 0 ; These make multiplayer not hard crash
 	LUI t4, 1 ; These make multiplayer not hard crash
 	LUI t5, 1 ; These make multiplayer not hard crash
@@ -41,6 +60,10 @@ displacedVanillaBootCode:
 	LUI t8, 0xD ; These make multiplayer not hard crash
 	J resumeVanillaBootCode
 	LUI t6, 0x000D
+
+initHook:
+	J 	initCode
+	NOP
 
 mainASMFunction:
 	JAL	0x805FC2B0
@@ -56,5 +79,6 @@ mainASMFunctionJump:
 
 .align 0x10
 
+.include "asm/hookcode.asm" ; Hook code
 .include "asm/objects.asm"
 .close
