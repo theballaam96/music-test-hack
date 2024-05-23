@@ -254,6 +254,8 @@
 .defineLabel setSlotTempo, 0x80601780
 .definelabel setSongTempo, 0x80602E2C
 
+.definelabel samplesTilNextCallback, 0x80739E5C
+
 ; Vanilla data
 .definelabel TransitionSpeed, 0x807FD88C
 .definelabel CutsceneWillPlay, 0x8075533B
@@ -344,6 +346,7 @@
 .defineLabel SongInWriteSlot, 0x80770560
 .defineLabel MusicTrackChannels, 0x807458DC
 .definelabel songVolumes, 0x807454F0
+.defineLabel synthesizer, 0x807563E4
 
 ; Tag Anywhere
 .definelabel LatestCollectedObject, 0x807FD734

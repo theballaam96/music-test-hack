@@ -205,6 +205,7 @@ typedef enum menu_options {
     /* 0x002 */ MENUOP_PAUSE,
     /* 0x003 */ MENUOP_STOP,
     /* 0x004 */ MENUOP_EQ,
+    /* 0x005 */ MENUOP_ZIP,
 } menu_options;
 
 typedef struct menu_option_tree {
@@ -230,7 +231,8 @@ static menu_option_tree music_menu_tree[] = {
     {.up = MENUOP_SONGNAME, .down=MENUOP_EQ, .left=NULL_OPTION, .right=MENUOP_PAUSE}, // play
     {.up = MENUOP_SONGNAME, .down=MENUOP_EQ, .left=MENUOP_PLAY, .right=MENUOP_STOP}, // pause
     {.up = MENUOP_SONGNAME, .down=MENUOP_EQ, .left=MENUOP_PAUSE, .right=NULL_OPTION}, // stop
-    {.up = MENUOP_PLAY, .down=NULL_OPTION, .left=NULL_OPTION, .right=NULL_OPTION}, // EQ
+    {.up = MENUOP_PLAY, .down=NULL_OPTION, .left=NULL_OPTION, .right=MENUOP_ZIP}, // EQ
+    {.up = MENUOP_PLAY, .down=NULL_OPTION, .left=MENUOP_EQ, .right=NULL_OPTION}, // Zip
 };
 
 void setSelectedOption(int option) {
@@ -259,11 +261,7 @@ void playNewSong(int index) {
 }
 
 void pauseSong(void) {
-    for (int i = 0; i < 4; i++) {
-        if (SongInWriteSlot[i]) {
-            setSlotTempo(SongInWriteSlot[i], 0.1f);
-        }
-    }
+    
 }
 
 void eqVolume(void) {
@@ -307,11 +305,40 @@ void initMenu(void) {
     eqVolume();
 }
 
+static u8 zip_in_progress = 0;
+static s16 zip_timer = -1;
+static s16 zip_stored_sample = 0;
+static s16 zip_effect_bus_ct = 0;
+
+void zipAudio(void) {
+    // Massively decreases the sample rate to speed the song up to check for errors with audio loops
+    if (!zip_in_progress) {
+        zip_in_progress = 1;
+        zip_stored_sample = synthesizer->maxAuxBusses;
+        zip_effect_bus_ct = synthesizer->numPVoices;
+        zip_timer = 300;
+        *(int*)(0x807FF700) = (int)&synthesizer->maxAuxBusses;
+        synthesizer->maxAuxBusses = 1102; // 20x speed
+        synthesizer->numPVoices = 0;
+    }
+}
+
 void menuLoop(void) {
     if (!loadedSongData) {
         initMenu();
     }
     loadedSongData = 1;
+    if (zip_in_progress) {
+        if (zip_timer >= 0) {
+            if (zip_timer == 0) {
+                synthesizer->maxAuxBusses = zip_stored_sample;
+                synthesizer->numPVoices = zip_effect_bus_ct;
+                zip_in_progress = 0;
+            }
+            zip_timer--;
+        }
+        return;
+    }
     switch (selected_music_menu_option) {
         case MENUOP_SONGNAME:
             if (NewlyPressedControllerInput.Buttons.d_up) {
@@ -339,7 +366,7 @@ void menuLoop(void) {
             break;
         case MENUOP_PAUSE:
             if (NewlyPressedControllerInput.Buttons.a) {
-                //pauseSong(); // Crashes the game
+                pauseSong(); // Crashes the game
             }
             break;
         case MENUOP_STOP:
@@ -350,6 +377,11 @@ void menuLoop(void) {
         case MENUOP_EQ:
             if (NewlyPressedControllerInput.Buttons.a) {
                 toggleVolumeEq();
+            }
+            break;
+        case MENUOP_ZIP:
+            if (NewlyPressedControllerInput.Buttons.a) {
+                zipAudio();
             }
             break;
     }
@@ -402,6 +434,10 @@ static char* volume_eq_strs[] = {
     "VOLUME EQ:OFF",
     "VOLUME EQ:ON",
 };
+static char* zip_states[] = {
+    "ZIP",
+    "ZIP: IN PROGRESS",
+};
 
 static char now_playing_str[40] = "";
 
@@ -435,5 +471,6 @@ Gfx* displayMusicMenu(Gfx* dl) {
     dl = renderMenuOption(dl, "WIP", MENUOP_PAUSE, 120, play_tray_y); // Pause
     dl = renderMenuOption(dl, "STOP", MENUOP_STOP, 220, play_tray_y);
     dl = renderMenuOption(dl, volume_eq_strs[volume_equalization], MENUOP_EQ, 20, CONTROLS_Y + 100);
+    dl = renderMenuOption(dl, zip_states[zip_in_progress], MENUOP_ZIP, 170, CONTROLS_Y + 100);
     return dl;
 }
