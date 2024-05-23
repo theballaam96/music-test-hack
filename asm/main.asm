@@ -27,6 +27,16 @@ resumeVanillaBootCode:
 .org 0x805DAE00 ; RDRAM
 
 displacedVanillaBootCode:
+	; Music Fix
+	LUI v0, 0x8074
+	ADDIU t3, r0, 0xD00 ; New size of bank 0
+	SW t3, 0x52B0 (v0)
+	LUI v0, 0x8060
+	ADDIU t3, r0, 0x38 ; Phys Voice Count
+	SH t3, 0xDA2 (v0)
+	ADDIU t3, r0, 0x70 ; Max Pvoice Parameter Update Count
+	SH t3, 0xDA6 (v0)
+	
 	LUI v0, 0x8001
 	ADDIU v0, v0, 0xDCC4
 	; Write per frame hook
@@ -34,17 +44,6 @@ displacedVanillaBootCode:
 	LW t3, lo(mainASMFunctionJump) (t3)
 	LUI t4, 0x8060
 	SW t3, 0xC164 (t4) ; Store per frame hook
-	
-	; Music Fix
-	; TODO: Figure out why this crashes
-	; LUI v0, 0x8074
-	; ADDIU t3, r0, 0xD00 ; New size of bank 0
-	; SW t3, 0x52B0 (v0)
-	; LUI v0, 0x8060
-	; ADDIU t3, r0, 0x38 ; Phys Voice Count
-	; SH t3, 0xDA2 (v0)
-	; ADDIU t3, r0, 0x70 ; Virtual Voice Count
-	; SH t3, 0xDA6 (v0)
 	
 	; Write Init Hook
 	LUI t3, hi(initHook)
