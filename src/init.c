@@ -33,4 +33,5 @@ void quickInit(void) {
     Mode = 5;
     StorySkip = 1;
     *(s8*)(0x80745D20) = 1;
+    // *(s8*)(0x80745D20) = 0;
 }

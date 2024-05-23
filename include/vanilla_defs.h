@@ -62,6 +62,8 @@ extern int getTextStyleHeight(int style);
 extern Gfx* displayText(Gfx* dl, int style, int x, int y, void* text_pointer, char unk0);
 
 extern void audioForcePlay(int slot);
+extern void setSlotTempo(int slot, int tempo);
+extern void setSongTempo(int song, float tempo);
 
 // Vanilla data
 extern f32 TransitionSpeed;
@@ -153,6 +155,7 @@ extern s8 preventSongPlaying;
 extern ALCSPlayer* SeqPlayers[4];
 extern u8 SongInWriteSlot[4];
 extern s16 MusicTrackChannels[12];
+extern s16 songVolumes[176];
 
 extern collected_item_struct* CollectedObjects;
 extern collected_item_struct* LatestCollectedObject;

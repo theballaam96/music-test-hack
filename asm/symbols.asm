@@ -251,6 +251,8 @@
 .definelabel displayText, 0x806FC530
 
 .defineLabel alCSPStop, 0x80739F00
+.defineLabel setSlotTempo, 0x80601780
+.definelabel setSongTempo, 0x80602E2C
 
 ; Vanilla data
 .definelabel TransitionSpeed, 0x807FD88C
@@ -341,6 +343,7 @@
 .definelabel SeqPlayers, 0x8076BF20
 .defineLabel SongInWriteSlot, 0x80770560
 .defineLabel MusicTrackChannels, 0x807458DC
+.definelabel songVolumes, 0x807454F0
 
 ; Tag Anywhere
 .definelabel LatestCollectedObject, 0x807FD734
