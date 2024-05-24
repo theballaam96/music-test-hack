@@ -276,7 +276,7 @@ void eqVolume(void) {
             } else if (stype == STYPE_MAJOR) {
                 volume = 27000;
             }
-            songVolumes[index] == volume;
+            songVolumes[index] = volume;
         }
     }
 }
