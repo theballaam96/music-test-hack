@@ -68,6 +68,16 @@ file_dict = [
 	}
 ]
 
+for x in range(175):
+	if x != 0:
+		file_dict.append({
+			"name": f"Song {x}",
+			"pointer_table_index": 0,
+			"file_index": x,
+			"source_file": f"song{x}.bin",
+			"target_compressed_size": 0x5DC0,
+		})
+
 map_replacements = [
 	# {
 	# 	"name": "Fairy Island Exit Test",
@@ -296,6 +306,31 @@ with open(newROMName, "r+b") as fh:
 				subprocess.run(["./build/n64tex.exe", x["texture_format"], x["source_file"]])
 			else:
 				print(" - ERROR: Unsupported texture format " + x["texture_format"])
+
+		if "target_compressed_size" in x:
+			x["do_not_compress"] = True
+			uncompressed_size = None
+			byte_read = None
+			with open(x["source_file"], "rb") as fg:
+				byte_read = fg.read()
+				uncompressed_size = len(byte_read)
+			if x.get("do_not_recompress", False):
+				compress = bytearray(byte_read)
+			else:
+				precomp = gzip.compress(byte_read, compresslevel=9)
+				byte_append = 0
+				diff = x["target_compressed_size"] - len(precomp)
+				if diff > 0:
+					precomp += byte_append.to_bytes(diff, "big")
+				compress = bytearray(precomp)
+				# Zero out timestamp in gzip header to make builds deterministic
+				compress[4] = 0
+				compress[5] = 0
+				compress[6] = 0
+				compress[7] = 0
+			with open(x["source_file"], "wb") as fg:
+				fg.write(compress)
+			x["output_file"] = x["source_file"]
 
 		if "use_external_gzip" in x and x["use_external_gzip"]:
 			if os.path.exists(x["source_file"]):

@@ -317,7 +317,6 @@ void zipAudio(void) {
         zip_stored_sample = synthesizer->maxAuxBusses;
         zip_effect_bus_ct = synthesizer->numPVoices;
         zip_timer = 300;
-        *(int*)(0x807FF700) = (int)&synthesizer->maxAuxBusses;
         synthesizer->maxAuxBusses = 1102; // 20x speed
         synthesizer->numPVoices = 0;
     }
