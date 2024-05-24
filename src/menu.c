@@ -242,15 +242,6 @@ void setSelectedOption(int option) {
     selected_music_menu_option = option;
 }
 
-void stopSong(void) {
-    for (int i = 0; i < 4; i++) {
-        if (SongInWriteSlot[i]) {
-            cancelMusic(SongInWriteSlot[i], i);
-        }
-    }
-    playing_index = -1;
-}
-
 void playNewSong(int index) {
     for (int i = 0; i < 4; i++) {
         SongInWriteSlot[i] = 0;
@@ -258,6 +249,16 @@ void playNewSong(int index) {
     preventSongPlaying = 1;
     MusicTrackChannels[0] = index; // This is an incredibly incredibly dirty way to do it, but it yields better load times
     playing_index = index;
+}
+
+void stopSong(void) {
+    // for (int i = 0; i < 4; i++) {
+    //     if (SongInWriteSlot[i]) {
+    //         cancelMusic(SongInWriteSlot[i], i);
+    //     }
+    // }
+    playNewSong(0);
+    playing_index = -1;
 }
 
 void pauseSong(void) {
@@ -471,5 +472,8 @@ Gfx* displayMusicMenu(Gfx* dl) {
     dl = renderMenuOption(dl, "STOP", MENUOP_STOP, 220, play_tray_y);
     dl = renderMenuOption(dl, volume_eq_strs[volume_equalization], MENUOP_EQ, 20, CONTROLS_Y + 100);
     dl = renderMenuOption(dl, zip_states[zip_in_progress], MENUOP_ZIP, 170, CONTROLS_Y + 100);
+    dl = drawPixelTextContainer(dl, 20, 208, "HACK BY BALLAAM AND ALMOSTSEAGULL", 0x0D, 0x3B, 0x4F, 0xFF, 0);
+    dl = drawPixelTextContainer(dl, 20, 220, "DISCORD.DK64RANDOMIZER.COM", 0x0D, 0x3B, 0x4F, 0xFF, 0);
+    dl = drawPixelTextContainer(dl, 253, 220, "V1.0", 0x08, 0x77, 0xA6, 0xFF, 0);
     return dl;
 }
