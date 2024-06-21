@@ -447,6 +447,11 @@ s32 getSongIndex(s32 raw_index, s32 delta) {
     return new_value;
 }
 
+static char* pause_states[] = {
+    "PAUSE",
+    "RESUME"
+};
+
 static char* volume_eq_strs[] = {
     "VOLUME EQ:OFF",
     "VOLUME EQ:ON",
@@ -457,6 +462,9 @@ static char* zip_states[] = {
 };
 
 static char now_playing_str[40] = "";
+static char voices_in_use_str[30] = "";
+static char events_in_queue_str[30] = "";
+static char updates_in_use_str[30] = "";
 
 Gfx* displayMusicMenu(Gfx* dl) {
     for (int i = 0; i < 174; i++) {
@@ -483,17 +491,24 @@ Gfx* displayMusicMenu(Gfx* dl) {
     } else {
         dl = renderMenuOption(dl, song_db[(s32)song_index].song_name, MENUOP_SONGNAME, 20, CONTROLS_Y);
     }
-    int play_tray_y = CONTROLS_Y + 80;
+    int play_tray_y = CONTROLS_Y + 60;
+    int stats_section_y = CONTROLS_Y + 100;
+    // Options
     dl = renderMenuOption(dl, "PLAY", MENUOP_PLAY, 20, play_tray_y);
-    if(!paused) {
-        dl = renderMenuOption(dl, "PAUSE", MENUOP_PAUSE, 120, play_tray_y);
-    } else {
-        dl = renderMenuOption(dl, "RESUME", MENUOP_PAUSE, 120, play_tray_y);
-    }
-    
+    dl = renderMenuOption(dl, pause_states[paused], MENUOP_PAUSE, 120, play_tray_y);
     dl = renderMenuOption(dl, "STOP", MENUOP_STOP, 220, play_tray_y);
-    dl = renderMenuOption(dl, volume_eq_strs[volume_equalization], MENUOP_EQ, 20, CONTROLS_Y + 100);
-    dl = renderMenuOption(dl, zip_states[zip_in_progress], MENUOP_ZIP, 170, CONTROLS_Y + 100);
+    dl = renderMenuOption(dl, volume_eq_strs[volume_equalization], MENUOP_EQ, 20, CONTROLS_Y + 80);
+    dl = renderMenuOption(dl, zip_states[zip_in_progress], MENUOP_ZIP, 170, CONTROLS_Y + 80);
+    
+    dk_strFormat(voices_in_use_str, "VOICES: %d OF 44", getVoicesUsed());
+    dk_strFormat(events_in_queue_str, "EVENT QUEUE: %d OF 64", getEventsUsed());
+    dk_strFormat(updates_in_use_str, "UPDATES: %d OF 112", getUpdatesUsed());
+
+    // Metrics
+    dl = drawPixelTextContainer(dl, 20, stats_section_y, voices_in_use_str, 0xFF, 0xFF, 0xFF, 0xFF, 0);
+    dl = drawPixelTextContainer(dl, 20, stats_section_y + 12, events_in_queue_str, 0xFF, 0xFF, 0xFF, 0xFF, 0);
+    dl = drawPixelTextContainer(dl, 20, stats_section_y + 24, updates_in_use_str, 0xFF, 0xFF, 0xFF, 0xFF, 0);
+    // Credits
     dl = drawPixelTextContainer(dl, 20, 208, "HACK BY BALLAAM AND ALMOSTSEAGULL", 0x0D, 0x3B, 0x4F, 0xFF, 0);
     dl = drawPixelTextContainer(dl, 20, 220, "DISCORD.DK64RANDOMIZER.COM", 0x0D, 0x3B, 0x4F, 0xFF, 0);
     dl = drawPixelTextContainer(dl, 253, 220, "V1.1", 0x08, 0x77, 0xA6, 0xFF, 0);
