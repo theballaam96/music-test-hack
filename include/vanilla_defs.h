@@ -65,6 +65,9 @@ extern void audioForcePlay(int slot);
 extern void setSlotTempo(int slot, int tempo);
 extern void setSongTempo(int song, float tempo);
 extern void restartSong(int write_slot, int song, float volume);
+extern char getSongWriteSlot(short song);
+extern void alCSPStop(ALCSPlayer* seqp);
+extern void alCSPPlay(ALCSPlayer* seqp);
 
 extern int samplesTilNextCallback(void* player);
 

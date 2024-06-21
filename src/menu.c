@@ -219,6 +219,7 @@ static menu_options selected_music_menu_option = MENUOP_SONGNAME;
 static u8 changing_position = 0;
 static u8 volume_equalization = 1;
 static s16 playing_index = 1;
+static u8 paused = 0;
 
 #define SONG_COUNT 175
 static u8 loadedSongData = 0;
@@ -250,6 +251,7 @@ void playNewSong(int index) {
     MusicTrackChannels[0] = index; // This is an incredibly incredibly dirty way to do it, but it yields better load times
     forceRestart(); // Circumvent the deadlock-prevention one (1) time. 
     playing_index = index;
+    paused = 0;
 }
 
 void stopSong(void) {
@@ -262,8 +264,22 @@ void stopSong(void) {
     playing_index = -1;
 }
 
+// Note: This functionality is not perfect. Scheduled MIDI events and unfinished notes will be flushed and stopped respectively. 
 void pauseSong(void) {
-    
+    short song = MusicTrackChannels[0];
+    if (song != 0){
+        char slot = getSongWriteSlot(song);
+        if(!paused){
+            alCSPStop(SeqPlayers[slot]);
+            preventSongPlaying = 0;
+            paused = 1;
+        } else {
+            alCSPPlay(SeqPlayers[slot]);
+            preventSongPlaying = 1;
+            paused = 0;
+        }
+    }
+
 }
 
 void eqVolume(void) {
@@ -367,7 +383,7 @@ void menuLoop(void) {
             break;
         case MENUOP_PAUSE:
             if (NewlyPressedControllerInput.Buttons.a) {
-                pauseSong(); // Crashes the game
+                pauseSong();
             }
             break;
         case MENUOP_STOP:
@@ -469,7 +485,12 @@ Gfx* displayMusicMenu(Gfx* dl) {
     }
     int play_tray_y = CONTROLS_Y + 80;
     dl = renderMenuOption(dl, "PLAY", MENUOP_PLAY, 20, play_tray_y);
-    dl = renderMenuOption(dl, "WIP", MENUOP_PAUSE, 120, play_tray_y); // Pause
+    if(!paused) {
+        dl = renderMenuOption(dl, "PAUSE", MENUOP_PAUSE, 120, play_tray_y);
+    } else {
+        dl = renderMenuOption(dl, "RESUME", MENUOP_PAUSE, 120, play_tray_y);
+    }
+    
     dl = renderMenuOption(dl, "STOP", MENUOP_STOP, 220, play_tray_y);
     dl = renderMenuOption(dl, volume_eq_strs[volume_equalization], MENUOP_EQ, 20, CONTROLS_Y + 100);
     dl = renderMenuOption(dl, zip_states[zip_in_progress], MENUOP_ZIP, 170, CONTROLS_Y + 100);
