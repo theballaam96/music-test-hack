@@ -248,6 +248,7 @@ void playNewSong(int index) {
     }
     preventSongPlaying = 1;
     MusicTrackChannels[0] = index; // This is an incredibly incredibly dirty way to do it, but it yields better load times
+    forceRestart(); // Circumvent the deadlock-prevention one (1) time. 
     playing_index = index;
 }
 
@@ -474,6 +475,6 @@ Gfx* displayMusicMenu(Gfx* dl) {
     dl = renderMenuOption(dl, zip_states[zip_in_progress], MENUOP_ZIP, 170, CONTROLS_Y + 100);
     dl = drawPixelTextContainer(dl, 20, 208, "HACK BY BALLAAM AND ALMOSTSEAGULL", 0x0D, 0x3B, 0x4F, 0xFF, 0);
     dl = drawPixelTextContainer(dl, 20, 220, "DISCORD.DK64RANDOMIZER.COM", 0x0D, 0x3B, 0x4F, 0xFF, 0);
-    dl = drawPixelTextContainer(dl, 253, 220, "V1.0", 0x08, 0x77, 0xA6, 0xFF, 0);
+    dl = drawPixelTextContainer(dl, 253, 220, "V1.1", 0x08, 0x77, 0xA6, 0xFF, 0);
     return dl;
 }
