@@ -1,6 +1,7 @@
 #include "../include/common.h"
 
 static s8 has_loaded = 0;
+static u16 previously_restarted_song = 0;
 
 void cFuncLoop(void) {
 	/*
@@ -34,4 +35,11 @@ Gfx* displayListModifiers(Gfx* dl) {
 		}
     }
     return dl;
+}
+
+void preventSongRestartDeadlock(int write_slot, int song, float volume){
+	if (MusicTrackChannels[write_slot] != previously_restarted_song){
+		previously_restarted_song = MusicTrackChannels[0];
+		restartSong(write_slot, song, volume);
+	}
 }

@@ -253,6 +253,7 @@
 .defineLabel alCSPStop, 0x80739F00
 .defineLabel setSlotTempo, 0x80601780
 .definelabel setSongTempo, 0x80602E2C
+.definelabel restartSong, 0x8060A6A0
 
 .definelabel samplesTilNextCallback, 0x80739E5C
 

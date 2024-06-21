@@ -16,6 +16,8 @@ void initHack(void) {
         *(int*)(0x8076BF38) = (int)&music_storage[0]; // Increase music storage
         initStackTrace();
         loadSingularHook(0x8071417C, &displayListCode);
+        writeFunction(0x80602A2C, &preventSongRestartDeadlock);
+        *(int*)(0x80602A30) = 0x30E500FF;
 
         // FINISH
         initialized = 1;
