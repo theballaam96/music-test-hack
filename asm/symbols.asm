@@ -256,6 +256,9 @@
 .definelabel setSongTempo, 0x80602E2C
 .definelabel restartSong, 0x8060A6A0
 .definelabel getSongWriteSlot, 0x80602430
+.definelabel cseqpAllocateVoice, 0x8073A3C4
+.definelabel cseqpFreeVoice, 0x8073A070
+.definelabel unkSynthFunction, 0x8073F8A0
 
 .definelabel samplesTilNextCallback, 0x80739E5C
 

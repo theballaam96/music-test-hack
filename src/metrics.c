@@ -71,27 +71,67 @@ void decrease_metrics_max_timers(){
 	}
 }
 
-void resetMetrics(){
+void resetMaxMetrics(){
 	for(int i = 0; i < 4; i++){
 		events_max_usage[i] = 0;
-		events_current_count[i] = 0;
 		events_max_timer[i] = 0;
 
 		voices_max_usage[i] = 0;
-		voices_current_count[i] = 0;
 		voices_max_timer[i] = 0;
 	}
 
 	updates_max_usage = 0;
-	updates_current_count = 0;
 	updates_max_timer = 0;
 }
 
-char getVoicesUsed(){
+ALVoiceState* updateVoicesUsedAllocate(ALCSPlayer* player, char note, char velocity, char channel){
 	int slot = getSongWriteSlot(MusicTrackChannels[0]);
-	ALCSPlayer* player = SeqPlayers[slot];
 	int playerAddress = (int) player;
-	return *(char*)(playerAddress + 0x89); // ALCSPlayer->occupiedVoices, not present in libaudio.h
+	voices_current_count[slot] = (int) *(char*)(playerAddress + 0x89); // ALCSPlayer->occupiedVoices, not present in libaudio.h
+	// Update the variables that facilitate the (max in past X frames) metrics
+	if(voices_max_usage[slot] <= voices_current_count[slot]){
+		voices_max_usage[slot] = voices_current_count[slot];
+		voices_max_timer[slot] = MAX_DISPLAY_TIME;
+	}
+	return cseqpAllocateVoice(player, note, velocity, channel);
+}
+
+void updateVoicesUsedFree(ALCSPlayer* player, ALVoice* voice){
+	int slot = getSongWriteSlot(MusicTrackChannels[0]);
+	int playerAddress = (int) player;
+	voices_current_count[slot] = (int) *(char*)(playerAddress + 0x89); // ALCSPlayer->occupiedVoices, not present in libaudio.h
+	if(voices_max_usage[slot] <= voices_current_count[slot]){
+		voices_max_usage[slot] = voices_current_count[slot];
+		voices_max_timer[slot] = MAX_DISPLAY_TIME;
+	}
+	cseqpFreeVoice(player, voice);
+}
+
+void updateUpdatesUsed(int curSamples, char unkChar, int effectsBus, int* unkInt){
+	int* paramList = synthesizer->paramList;
+	int availableUpdates = 112;
+	for (int i = 0; i <= 112; i++){
+		if (*(int*)(paramList) == 0){
+			availableUpdates = i;
+		} else {
+			paramList = *(int*)(paramList);
+		}
+	}
+	updates_current_count = 112 - availableUpdates;
+	if(updates_max_usage <= updates_current_count){
+		updates_max_usage = updates_current_count;
+		updates_max_timer = MAX_DISPLAY_TIME;
+	}
+	unkSynthFunction(curSamples, unkChar, effectsBus, unkInt);
+}
+
+int getVoicesUsed(){
+	int slot = getSongWriteSlot(MusicTrackChannels[0]);
+	if (voices_max_timer[slot] > 0){
+		return voices_max_usage[slot];
+	} else {
+		return voices_current_count[slot];
+	}
 }
 
 int getEventsUsed(){
@@ -107,31 +147,17 @@ int getEventsUsed(){
 }
 
 int getUpdatesUsed(){
-	if (MusicTrackChannels[0] == 0){
-		return 0;
+	if (updates_max_timer > 0){
+		return updates_max_usage;
+	} else {
+		return updates_current_count;
 	}
-	int* paramList = synthesizer->paramList;
-	if(paramList == 0){
-		return 112;
-	}
-	for (int i = 1; i <= 112; i++){
-		if (*(int*)(&paramList) == 0){
-			return i;
-		} else {
-			paramList = *(int*)(&paramList);
-		}
-	}
-	return 0;
 }
 
 char* padNumber(int num, int length){
 	number_string[0] = 0;
 	number_string[1] = 0;
 	number_string[2] = 0;
-	if((length == 2 && num > 99) || (num > 999)){
-		// This should never happen, so if it consistently displays 94 or 141, this is one way to find out it's broken.
-		return 47 * length;
-	}
 	if ((length == 3 && num < 100 && num > 9) || (length == 2 && num < 10)){
 		dk_strFormat(number_string, "0%d", num);
 	} else if (length == 3 && num < 10){

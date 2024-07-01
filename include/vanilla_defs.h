@@ -68,6 +68,9 @@ extern void restartSong(int write_slot, int song, float volume);
 extern char getSongWriteSlot(short song);
 extern void alCSPStop(ALCSPlayer* seqp);
 extern void alCSPPlay(ALCSPlayer* seqp);
+extern ALVoiceState* cseqpAllocateVoice(ALCSPlayer* player, char note, char velocity, char channel);
+extern void cseqpFreeVoice(ALCSPlayer* player, ALVoice* voice);
+extern void unkSynthFunction(int curSamples, char unkChar, int effectsBus, int* unkInt);
 
 extern int samplesTilNextCallback(void* player);
 

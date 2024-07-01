@@ -70,6 +70,15 @@ void initHack(void) {
         writeFunction(0x8073B524, &decrease_event_count_2);
         // Hi-jack cseqp_stop_voice with custom function
         writeFunction(0x8073A1F0, &decrease_event_count_2);
+        
+        // Hi-jack cseqpAllocateVoice with custom function
+        writeFunction(0x80733F5C, &updateVoicesUsedAllocate);
+        // Hi-jack cseqpFreeVoice with custom function
+        writeFunction(0x8073324C, &updateVoicesUsedFree);
+        writeFunction(0x807337C8, &updateVoicesUsedFree);
+        
+        // Hi-jack the Synthesizer's routine function with custom function
+        writeFunction(0x8073D24C, &updateUpdatesUsed);
 
         // FINISH
         initialized = 1;
