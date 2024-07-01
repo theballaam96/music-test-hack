@@ -64,6 +64,13 @@ extern Gfx* displayText(Gfx* dl, int style, int x, int y, void* text_pointer, ch
 extern void audioForcePlay(int slot);
 extern void setSlotTempo(int slot, int tempo);
 extern void setSongTempo(int song, float tempo);
+extern void restartSong(int write_slot, int song, float volume);
+extern char getSongWriteSlot(short song);
+extern void alCSPStop(ALCSPlayer* seqp);
+extern void alCSPPlay(ALCSPlayer* seqp);
+extern ALVoiceState* cseqpAllocateVoice(ALCSPlayer* player, char note, char velocity, char channel);
+extern void cseqpFreeVoice(ALCSPlayer* player, ALVoice* voice);
+extern void unkSynthFunction(int curSamples, char unkChar, int effectsBus, int* unkInt);
 
 extern int samplesTilNextCallback(void* player);
 

@@ -1,6 +1,8 @@
 #include "../include/common.h"
 
 static s8 has_loaded = 0;
+static u16 previously_restarted_song = 0;
+static u8 force_restart = 0; // forces the song to restart, despite it being told not to restart a song that's already playing
 
 void cFuncLoop(void) {
 	/*
@@ -20,6 +22,7 @@ void cFuncLoop(void) {
 		}
 		if (has_loaded) {
 			menuLoop();
+    		decrease_metrics_max_timers();
 		}
 	}
 }
@@ -34,4 +37,19 @@ Gfx* displayListModifiers(Gfx* dl) {
 		}
     }
     return dl;
+}
+
+// Prevent handleMusic2 from making needlessly(?) restarting the song before it even had a chance to play
+void preventSongRestartDeadlock(int write_slot, int song, float volume){
+	if (MusicTrackChannels[write_slot] != previously_restarted_song || force_restart){
+		previously_restarted_song = MusicTrackChannels[0];
+		restartSong(write_slot, song, volume);
+		force_restart = 0;
+	}
+	resetMaxMetrics();
+}
+
+// This was the first solution I found when trying to make a global accessible in a different file
+void forceRestart(){
+	force_restart = 1;
 }

@@ -251,8 +251,14 @@
 .definelabel displayText, 0x806FC530
 
 .defineLabel alCSPStop, 0x80739F00
+.definelabel alCSPPlay, 0x80737E50
 .defineLabel setSlotTempo, 0x80601780
 .definelabel setSongTempo, 0x80602E2C
+.definelabel restartSong, 0x8060A6A0
+.definelabel getSongWriteSlot, 0x80602430
+.definelabel cseqpAllocateVoice, 0x8073A3C4
+.definelabel cseqpFreeVoice, 0x8073A070
+.definelabel unkSynthFunction, 0x8073F8A0
 
 .definelabel samplesTilNextCallback, 0x80739E5C
 

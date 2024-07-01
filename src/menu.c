@@ -219,6 +219,7 @@ static menu_options selected_music_menu_option = MENUOP_SONGNAME;
 static u8 changing_position = 0;
 static u8 volume_equalization = 1;
 static s16 playing_index = 1;
+static u8 paused = 0;
 
 #define SONG_COUNT 175
 static u8 loadedSongData = 0;
@@ -248,7 +249,9 @@ void playNewSong(int index) {
     }
     preventSongPlaying = 1;
     MusicTrackChannels[0] = index; // This is an incredibly incredibly dirty way to do it, but it yields better load times
+    forceRestart(); // Circumvent the deadlock-prevention one (1) time. 
     playing_index = index;
+    paused = 0;
 }
 
 void stopSong(void) {
@@ -261,8 +264,22 @@ void stopSong(void) {
     playing_index = -1;
 }
 
+// Note: This functionality is not perfect. Scheduled MIDI events and unfinished notes will be flushed and stopped respectively. 
 void pauseSong(void) {
-    
+    short song = MusicTrackChannels[0];
+    if (song != 0){
+        char slot = getSongWriteSlot(song);
+        if(!paused){
+            alCSPStop(SeqPlayers[slot]);
+            preventSongPlaying = 0;
+            paused = 1;
+        } else {
+            alCSPPlay(SeqPlayers[slot]);
+            preventSongPlaying = 1;
+            paused = 0;
+        }
+    }
+
 }
 
 void eqVolume(void) {
@@ -366,7 +383,7 @@ void menuLoop(void) {
             break;
         case MENUOP_PAUSE:
             if (NewlyPressedControllerInput.Buttons.a) {
-                pauseSong(); // Crashes the game
+                pauseSong();
             }
             break;
         case MENUOP_STOP:
@@ -430,6 +447,11 @@ s32 getSongIndex(s32 raw_index, s32 delta) {
     return new_value;
 }
 
+static char* pause_states[] = {
+    "PAUSE",
+    "RESUME"
+};
+
 static char* volume_eq_strs[] = {
     "VOLUME EQ:OFF",
     "VOLUME EQ:ON",
@@ -440,6 +462,9 @@ static char* zip_states[] = {
 };
 
 static char now_playing_str[40] = "";
+static char voices_in_use_str[30] = "";
+static char events_in_queue_str[30] = "";
+static char updates_in_use_str[30] = "";
 
 Gfx* displayMusicMenu(Gfx* dl) {
     for (int i = 0; i < 174; i++) {
@@ -466,14 +491,27 @@ Gfx* displayMusicMenu(Gfx* dl) {
     } else {
         dl = renderMenuOption(dl, song_db[(s32)song_index].song_name, MENUOP_SONGNAME, 20, CONTROLS_Y);
     }
-    int play_tray_y = CONTROLS_Y + 80;
+    int play_tray_y = CONTROLS_Y + 60;
+    int stats_section_y = CONTROLS_Y + 100;
+    // Options
     dl = renderMenuOption(dl, "PLAY", MENUOP_PLAY, 20, play_tray_y);
-    dl = renderMenuOption(dl, "WIP", MENUOP_PAUSE, 120, play_tray_y); // Pause
+    dl = renderMenuOption(dl, pause_states[paused], MENUOP_PAUSE, 120, play_tray_y);
     dl = renderMenuOption(dl, "STOP", MENUOP_STOP, 220, play_tray_y);
-    dl = renderMenuOption(dl, volume_eq_strs[volume_equalization], MENUOP_EQ, 20, CONTROLS_Y + 100);
-    dl = renderMenuOption(dl, zip_states[zip_in_progress], MENUOP_ZIP, 170, CONTROLS_Y + 100);
+    dl = renderMenuOption(dl, volume_eq_strs[volume_equalization], MENUOP_EQ, 20, CONTROLS_Y + 80);
+    dl = renderMenuOption(dl, zip_states[zip_in_progress], MENUOP_ZIP, 170, CONTROLS_Y + 80);
+    
+    dk_strFormat(voices_in_use_str, "VOICES: %s OF 44 WIP", padNumber(getVoicesUsed(), 2));
+    dk_strFormat(events_in_queue_str, "EVENT QUEUE: %s OF 64 WIP", padNumber(getEventsUsed(), 2));
+    // dk_strFormat(updates_in_use_str, "UPDATES: %s OF 112", padNumber(getUpdatesUsed(), 3));
+
+    // Metrics
+    dl = drawPixelTextContainer(dl, 20, stats_section_y, voices_in_use_str, 0xFF, 0xFF, 0xFF, 0xFF, 0);
+    dl = drawPixelTextContainer(dl, 20, stats_section_y + 12, events_in_queue_str, 0xFF, 0xFF, 0xFF, 0xFF, 0);
+    // dl = drawPixelTextContainer(dl, 20, stats_section_y + 24, updates_in_use_str, 0xFF, 0xFF, 0xFF, 0xFF, 0);
+    
+    // Credits
     dl = drawPixelTextContainer(dl, 20, 208, "HACK BY BALLAAM AND ALMOSTSEAGULL", 0x0D, 0x3B, 0x4F, 0xFF, 0);
     dl = drawPixelTextContainer(dl, 20, 220, "DISCORD.DK64RANDOMIZER.COM", 0x0D, 0x3B, 0x4F, 0xFF, 0);
-    dl = drawPixelTextContainer(dl, 253, 220, "V1.0", 0x08, 0x77, 0xA6, 0xFF, 0);
+    dl = drawPixelTextContainer(dl, 253, 220, "V1.1", 0x08, 0x77, 0xA6, 0xFF, 0);
     return dl;
 }
