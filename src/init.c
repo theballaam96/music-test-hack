@@ -78,7 +78,7 @@ void initHack(void) {
         writeFunction(0x807337C8, &updateVoicesUsedFree);
         
         // Hi-jack the Synthesizer's routine function with custom function
-        writeFunction(0x8073D24C, &updateUpdatesUsed);
+        // writeFunction(0x8073D24C, &updateUpdatesUsed); // Recompiler makes the emulator not run this code
 
         // FINISH
         initialized = 1;

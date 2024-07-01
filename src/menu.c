@@ -500,14 +500,14 @@ Gfx* displayMusicMenu(Gfx* dl) {
     dl = renderMenuOption(dl, volume_eq_strs[volume_equalization], MENUOP_EQ, 20, CONTROLS_Y + 80);
     dl = renderMenuOption(dl, zip_states[zip_in_progress], MENUOP_ZIP, 170, CONTROLS_Y + 80);
     
-    dk_strFormat(voices_in_use_str, "VOICES: %s OF 44", padNumber(getVoicesUsed(), 2));
+    dk_strFormat(voices_in_use_str, "VOICES: %s OF 44 WIP", padNumber(getVoicesUsed(), 2));
     dk_strFormat(events_in_queue_str, "EVENT QUEUE: %s OF 64 WIP", padNumber(getEventsUsed(), 2));
-    dk_strFormat(updates_in_use_str, "UPDATES: %s OF 112", padNumber(getUpdatesUsed(), 3));
+    // dk_strFormat(updates_in_use_str, "UPDATES: %s OF 112", padNumber(getUpdatesUsed(), 3));
 
     // Metrics
     dl = drawPixelTextContainer(dl, 20, stats_section_y, voices_in_use_str, 0xFF, 0xFF, 0xFF, 0xFF, 0);
     dl = drawPixelTextContainer(dl, 20, stats_section_y + 12, events_in_queue_str, 0xFF, 0xFF, 0xFF, 0xFF, 0);
-    dl = drawPixelTextContainer(dl, 20, stats_section_y + 24, updates_in_use_str, 0xFF, 0xFF, 0xFF, 0xFF, 0);
+    // dl = drawPixelTextContainer(dl, 20, stats_section_y + 24, updates_in_use_str, 0xFF, 0xFF, 0xFF, 0xFF, 0);
     
     // Credits
     dl = drawPixelTextContainer(dl, 20, 208, "HACK BY BALLAAM AND ALMOSTSEAGULL", 0x0D, 0x3B, 0x4F, 0xFF, 0);
