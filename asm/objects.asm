@@ -3,4 +3,5 @@
 .importobj "obj/src_lib.o"
 .importobj "obj/src_main.o"
 .importobj "obj/src_menu.o"
+.importobj "obj/src_metrics.o"
 .importobj "obj/src_stack_trace.o"

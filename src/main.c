@@ -22,6 +22,7 @@ void cFuncLoop(void) {
 		}
 		if (has_loaded) {
 			menuLoop();
+    		decrease_metrics_max_timers();
 		}
 	}
 }
@@ -45,6 +46,7 @@ void preventSongRestartDeadlock(int write_slot, int song, float volume){
 		restartSong(write_slot, song, volume);
 		force_restart = 0;
 	}
+	// resetMetrics();
 }
 
 // This was the first solution I found when trying to make a global accessible in a different file
