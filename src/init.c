@@ -15,6 +15,7 @@ void initHack(void) {
         *(s32 *)(0x80731F78) = 0;
         *(int*)(0x8076BF38) = (int)&music_storage[0]; // Increase music storage
         initStackTrace();
+        assignAllSongsToBank0();
         loadSingularHook(0x8071417C, &displayListCode);
         writeFunction(0x80602A2C, &preventSongRestartDeadlock);
         *(int*)(0x80602A30) = 0x30E500FF; // _ANDI $a1, $a3, 0xFF (vanilla code for that location)
@@ -97,4 +98,10 @@ void quickInit(void) {
     StorySkip = 1;
     *(s8*)(0x80745D20) = 1;
     // *(s8*)(0x80745D20) = 0;
+}
+
+assignAllSongsToBank0(){
+    for(int i = 0; i < 176; i++){
+        songData[i] &= 0xFF81;
+    }
 }
