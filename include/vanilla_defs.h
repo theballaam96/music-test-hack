@@ -163,7 +163,7 @@ extern hudData* HUD;
 
 extern s8 preventSongPlaying;
 extern u16 songData[176];
-extern u16 nullArray[12];
+extern u16 trackStateArray[12];
 extern ALCSPlayer* SeqPlayers[4];
 extern u8 SongInWriteSlot[4];
 extern s16 MusicTrackChannels[12];
