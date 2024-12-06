@@ -503,7 +503,7 @@ Gfx* displayMusicMenu(Gfx* dl) {
     dl = renderMenuOption(dl, zip_states[zip_in_progress], MENUOP_ZIP, 170, CONTROLS_Y + 80);
     
     dk_strFormat(voices_in_use_str, "VOICES: %s OF 44 WIP", padNumber(getVoicesUsed(), 2));
-    dk_strFormat(events_in_queue_str, "EVENT QUEUE: %s OF 64 WIP", padNumber(getEventsUsed(), 2));
+    // dk_strFormat(events_in_queue_str, "EVENT QUEUE: %s OF 64 WIP", padNumber(getEventsUsed(), 2));  // Stability; Can keep increasing far beyond 800
     // dk_strFormat(updates_in_use_str, "UPDATES: %s OF 112", padNumber(getUpdatesUsed(), 3));
 
     // Metrics
@@ -514,6 +514,6 @@ Gfx* displayMusicMenu(Gfx* dl) {
     // Credits
     dl = drawPixelTextContainer(dl, 20, 208, "HACK BY BALLAAM AND ALMOSTSEAGULL", 0x0D, 0x3B, 0x4F, 0xFF, 0);
     dl = drawPixelTextContainer(dl, 20, 220, "DISCORD.DK64RANDOMIZER.COM", 0x0D, 0x3B, 0x4F, 0xFF, 0);
-    dl = drawPixelTextContainer(dl, 253, 220, "V1.1", 0x08, 0x77, 0xA6, 0xFF, 0);
+    dl = drawPixelTextContainer(dl, 253, 220, "V1.2", 0x08, 0x77, 0xA6, 0xFF, 0);
     return dl;
 }
