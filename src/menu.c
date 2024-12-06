@@ -247,9 +247,12 @@ void playNewSong(int index) {
     for (int i = 0; i < 4; i++) {
         SongInWriteSlot[i] = 0;
     }
+    for (int i = 0; i < 12; i++) {
+        nullArray[i] = 0;
+    }
     preventSongPlaying = 1;
     MusicTrackChannels[0] = index; // This is an incredibly incredibly dirty way to do it, but it yields better load times
-    forceRestart(); // Circumvent the deadlock-prevention one (1) time. 
+    // forceRestart(); // Circumvent the deadlock-prevention one (1) time. 
     playing_index = index;
     paused = 0;
 }

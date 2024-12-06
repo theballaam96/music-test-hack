@@ -73,6 +73,7 @@ extern void cseqpFreeVoice(ALCSPlayer* player, ALVoice* voice);
 extern void unkSynthFunction(int curSamples, char unkChar, int effectsBus, int* unkInt);
 
 extern int samplesTilNextCallback(void* player);
+extern int getTrackChannel(int song);
 
 // Vanilla data
 extern f32 TransitionSpeed;
@@ -161,6 +162,8 @@ extern f32 LZFadeoutProgress;
 extern hudData* HUD;
 
 extern s8 preventSongPlaying;
+extern u16 songData[176];
+extern u16 nullArray[12];
 extern ALCSPlayer* SeqPlayers[4];
 extern u8 SongInWriteSlot[4];
 extern s16 MusicTrackChannels[12];

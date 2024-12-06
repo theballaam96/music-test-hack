@@ -41,10 +41,9 @@ Gfx* displayListModifiers(Gfx* dl) {
 
 // Prevent handleMusic2 from making needlessly(?) restarting the song before it even had a chance to play
 void preventSongRestartDeadlock(int write_slot, int song, float volume){
-	if (MusicTrackChannels[write_slot] != previously_restarted_song || force_restart){
+	if (nullArray[getTrackChannel(song)] != 1){
 		previously_restarted_song = MusicTrackChannels[0];
 		restartSong(write_slot, song, volume);
-		force_restart = 0;
 	}
 	resetMaxMetrics();
 }

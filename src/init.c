@@ -98,3 +98,9 @@ void quickInit(void) {
     *(s8*)(0x80745D20) = 1;
     // *(s8*)(0x80745D20) = 0;
 }
+
+assignAllSongsToBank0(){
+    for(int i = 0; i < 176; i++){
+        songData[i] &= 0xFFF9;
+    }
+}

@@ -242,6 +242,9 @@
 .definelabel textOverlayCode, 0x8069DA54
 .definelabel initiateTransitionFade, 0x807124B8
 .definelabel preventSongPlaying, 0x80745650
+.definelabel getTrackChannel, 0x8060245C
+.definelabel songData, 0x80745658
+.definelabel nullArray, 0x80745924
 
 .definelabel initDisplayList, 0x807132DC
 .definelabel displayImage, 0x8068C5A8
