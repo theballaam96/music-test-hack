@@ -12,6 +12,8 @@ static int updates_max_usage = 0;
 static int updates_current_count = 0;
 static int updates_max_timer = 0;
 
+static int dead_voices = 0;
+
 static char* number_string[3] = {"", "", ""};
 
 #define MAX_DISPLAY_TIME 45
@@ -99,6 +101,7 @@ void resetMaxMetrics(){
 }
 
 ALVoiceState* updateVoicesUsedAllocate(ALCSPlayer* player, char note, char velocity, char channel){
+	ALVoiceState* resultingVoiceState = cseqpAllocateVoice(player, note, velocity, channel);
 	int slot = getSongWriteSlot(MusicTrackChannels[0]);
 	int playerAddress = (int) player;
 	voices_current_count[slot] = (int) *(char*)(playerAddress + 0x89); // ALCSPlayer->occupiedVoices, not present in libaudio.h
@@ -107,7 +110,7 @@ ALVoiceState* updateVoicesUsedAllocate(ALCSPlayer* player, char note, char veloc
 		voices_max_usage[slot] = voices_current_count[slot];
 		voices_max_timer[slot] = MAX_DISPLAY_TIME;
 	}
-	return cseqpAllocateVoice(player, note, velocity, channel);
+	return resultingVoiceState;
 }
 
 void updateVoicesUsedFree(ALCSPlayer* player, ALVoice* voice){
@@ -186,6 +189,19 @@ int getUpdatesUsed(){
 	} else {
 		return updates_current_count;
 	}
+}
+
+void voiceDies(){
+	dead_voices++;
+	musicBugMonitor();
+}
+
+void voiceDies2(){
+	dead_voices++;
+}
+
+int getDeadVoices(){
+	return dead_voices;
 }
 
 char* padNumber(int num, int length){

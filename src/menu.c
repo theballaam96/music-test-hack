@@ -467,6 +467,7 @@ static char now_playing_str[40] = "";
 static char voices_in_use_str[30] = "";
 static char events_in_queue_str[30] = "";
 static char updates_in_use_str[30] = "";
+static char lost_param_updates[10] = "";
 
 Gfx* displayMusicMenu(Gfx* dl) {
     for (int i = 0; i < 174; i++) {
@@ -505,15 +506,19 @@ Gfx* displayMusicMenu(Gfx* dl) {
     dk_strFormat(voices_in_use_str, "VOICES: %s OF 44", padNumber(getVoicesUsed(), 2));
     dk_strFormat(events_in_queue_str, "EVENT QUEUE: %s OF 64", padNumber(getEventsUsed(), 2));
     dk_strFormat(updates_in_use_str, "UPDATES: %s OF 112", padNumber(getUpdatesUsed(), 3));
+    dk_strFormat(lost_param_updates, "%d", getDeadVoices());
 
     // Metrics
     dl = drawPixelTextContainer(dl, 20, stats_section_y, voices_in_use_str, 0xFF, 0xFF, 0xFF, 0xFF, 0);
     dl = drawPixelTextContainer(dl, 20, stats_section_y + 12, events_in_queue_str, 0xFF, 0xFF, 0xFF, 0xFF, 0);
     dl = drawPixelTextContainer(dl, 20, stats_section_y + 24, updates_in_use_str, 0xFF, 0xFF, 0xFF, 0xFF, 0);
+    if(getDeadVoices() > 1){
+        dl = drawPixelTextContainer(dl, 253, 16, lost_param_updates, 0xFF, 0x0, 0x0, 0xFF, 0);
+    }
     
     // Credits
     dl = drawPixelTextContainer(dl, 20, 208, "HACK BY BALLAAM AND ALMOSTSEAGULL", 0x0D, 0x3B, 0x4F, 0xFF, 0);
     dl = drawPixelTextContainer(dl, 20, 220, "DISCORD.DK64RANDOMIZER.COM", 0x0D, 0x3B, 0x4F, 0xFF, 0);
-    dl = drawPixelTextContainer(dl, 253, 220, "V1.2", 0x08, 0x77, 0xA6, 0xFF, 0);
+    dl = drawPixelTextContainer(dl, 253, 220, "V1.3", 0x08, 0x77, 0xA6, 0xFF, 0);
     return dl;
 }

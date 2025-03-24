@@ -8,3 +8,7 @@ extern ALVoiceState* updateVoicesUsedAllocate(ALCSPlayer* player, char note, cha
 extern void updateVoicesUsedFree(ALCSPlayer* player, ALVoice* voice);
 extern void updateUpdatesUsed(int* pVoice, int type, int* param);
 extern void updateUpdatesUsed2(int* param);
+extern void voiceDies();
+extern void voiceDies2();
+extern void musicBugMonitor();
+extern void musicBugMonitor2();

@@ -76,6 +76,16 @@ mainASMFunctionJump:
 	J mainASMFunction ; Instruction copied and used as a hook
 	NOP
 
+musicBugMonitor:
+	J 0x8073B814
+	NOP
+
+musicBugMonitor2:
+	JAL voiceDies2
+	NOP
+	J 0x8073B740
+	NOP
+
 .align 0x10
 
 .include "asm/hookcode.asm" ; Hook code

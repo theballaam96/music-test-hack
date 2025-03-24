@@ -97,6 +97,10 @@ void initHack(void) {
         // Hi-jack the function that frees updates with custom function
         writeFunction(0x8073F168, &updateUpdatesUsed2);
 
+        // Hi-jack the music bug code with a hook to keep track of how many voices die
+        writeFunction(0x8073B798, &voiceDies);
+        loadSingularHook(0x8073B6E4, &musicBugMonitor2);
+
         // FINISH
         initialized = 1;
     }
