@@ -261,7 +261,8 @@
 .definelabel getSongWriteSlot, 0x80602430
 .definelabel cseqpAllocateVoice, 0x8073A3C4
 .definelabel cseqpFreeVoice, 0x8073A070
-.definelabel unkSynthFunction, 0x8073F8A0
+.definelabel setParam, 0x8073F1E4
+.definelabel freeParam, 0x80739CE8
 
 .definelabel samplesTilNextCallback, 0x80739E5C
 

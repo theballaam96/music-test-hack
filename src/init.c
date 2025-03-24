@@ -78,8 +78,28 @@ void initHack(void) {
         writeFunction(0x8073324C, &updateVoicesUsedFree);
         writeFunction(0x807337C8, &updateVoicesUsedFree);
         
-        // Hi-jack the Synthesizer's routine function with custom function
-        // writeFunction(0x8073D24C, &updateUpdatesUsed); // Recompiler makes the emulator not run this code
+        // Hi-jack the function that assigns updates with custom function (14 calls)
+        writeFunction(0x8073B730, &updateUpdatesUsed);
+        writeFunction(0x8073B7E8, &updateUpdatesUsed);
+        writeFunction(0x8073B8D4, &updateUpdatesUsed);
+        writeFunction(0x8073B990, &updateUpdatesUsed);
+        writeFunction(0x8073BA40, &updateUpdatesUsed);
+        writeFunction(0x8073BAF0, &updateUpdatesUsed);
+        writeFunction(0x8073C8B0, &updateUpdatesUsed);
+        writeFunction(0x8073CBD0, &updateUpdatesUsed);
+        writeFunction(0x8073CC38, &updateUpdatesUsed);
+        writeFunction(0x8073CEDC, &updateUpdatesUsed);
+        writeFunction(0x8073CF90, &updateUpdatesUsed);
+        writeFunction(0x8073D040, &updateUpdatesUsed);
+        writeFunction(0x8073EFE8, &updateUpdatesUsed);
+        writeFunction(0x8073F100, &updateUpdatesUsed);
+
+        // Hi-jack the function that frees updates with custom function
+        writeFunction(0x8073F168, &updateUpdatesUsed2);
+
+        // Hi-jack the music bug code with a hook to keep track of how many voices die
+        writeFunction(0x8073B798, &voiceDies);
+        loadSingularHook(0x8073B6E4, &musicBugMonitor2);
 
         // FINISH
         initialized = 1;
