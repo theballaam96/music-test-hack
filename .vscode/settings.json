@@ -3,5 +3,8 @@
         "common.h": "c",
         "vars.h": "c",
         "libaudio.h": "c"
-    }
+    },
+    "cSpell.words": [
+        "evtq"
+    ]
 }

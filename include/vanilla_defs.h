@@ -71,6 +71,8 @@ extern void alCSPPlay(ALCSPlayer* seqp);
 extern ALVoiceState* cseqpAllocateVoice(ALCSPlayer* player, char note, char velocity, char channel);
 extern void cseqpFreeVoice(ALCSPlayer* player, ALVoice* voice);
 extern void unkSynthFunction(int curSamples, char unkChar, int effectsBus, int* unkInt);
+extern void setParam(int* pVoice, int type, int* param);
+extern void freeParam(int* param);
 
 extern int samplesTilNextCallback(void* player);
 extern int getTrackChannel(int song);
